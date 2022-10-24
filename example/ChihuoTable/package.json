@@ -1,0 +1,36 @@
+{
+  "name": "@chihuo/table-example",
+  "version": "1.0.0",
+  "main": "index.jsx.js",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.10",
+    "@mui/system": "^5.10.10",
+    "@mui/x-data-grid-generator": "^5.17.7",
+    "@tabler/icons": "^1.106.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "description": "react mui table component",
+  "repository": "https://github.com/langwan/chihuo-table",
+  "author": "langwan",
+  "private": false
+}
