@@ -20,9 +20,9 @@ const Root = styled("div", {
 
 const Header = styled(Stack, {
   name: "ChihuoTableHeader",
+  slot: "Root",
   overridesResolver: (props, styles) => [styles.root],
 })(({ theme }) => ({
-  fontSize: 14,
   ":hover": {
     backgroundColor: "#F4F4F4",
   },
@@ -236,6 +236,7 @@ export const ChihuoTable = ({
     <Root sx={sx}>
       <Stack>
         <Header
+          className="ChihuoTableHeader-root"
           direction="row"
           justifyContent={"flex-start"}
           alignItems="center"
@@ -340,6 +341,7 @@ export const ChihuoTable = ({
                 if (row[key]) {
                   return (
                     <Stack
+                      className={"ChihuoTable-cell"}
                       direction={"row"}
                       alignItems="center"
                       justifyContent={"flex-start"}

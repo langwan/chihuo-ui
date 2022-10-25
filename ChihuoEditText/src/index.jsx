@@ -42,7 +42,10 @@ export const ChihuoEditText = ({
   }, [content]);
 
   return (
-    <Box sx={{ overflow: "hidden", flexGrow: 1 }}>
+    <Box
+      className={"ChihuoEditText-root"}
+      sx={{ overflow: "hidden", flexGrow: 1 }}
+    >
       {editState != end ? (
         <TextField
           variant="standard"

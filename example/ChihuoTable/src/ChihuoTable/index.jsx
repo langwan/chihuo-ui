@@ -1,8 +1,8 @@
-import { Box, Checkbox, Stack, TextField } from "@mui/material";
+import { Box, Checkbox, Stack, TextField, Typography } from "@mui/material";
 
 import { styled } from "@mui/system";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 const name = "ChihuoTable";
 
 const GridCellModes = {
@@ -53,8 +53,8 @@ export const ChihuoTable = ({
   onCellEditStop,
   onSortModelChange,
   initialState,
-  disableEvent,
   rows,
+  sx,
 }) => {
   const [columnMap, setColumnMap] = useState({});
   const [editValue, setEditValue] = useState("");
@@ -64,21 +64,21 @@ export const ChihuoTable = ({
   const [functionKeyIsDown, setFunctionKeyIsDown] = useState(false);
   const [latestCheckboxId, setLatestCheckboxId] = useState(0);
 
-  const onGlobalKeyDown = (event) => {
+  const onGlobalKeyDown = useCallback((event) => {
     if (event.key === "Shift") {
       setFunctionKeyIsDown(true);
     }
-  };
+  }, []);
 
-  const onGlobalKeyUp = (event) => {
+  const onGlobalKeyUp = useCallback((event) => {
     if (event.key === "Shift") {
       setFunctionKeyIsDown(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    document.addEventListener("keydown", onGlobalKeyDown, false);
-    document.addEventListener("keyup", onGlobalKeyUp, false);
+    document.addEventListener("keydown", onGlobalKeyDown);
+    document.addEventListener("keyup", onGlobalKeyUp);
     return () => {
       document.removeEventListener("keydown", onGlobalKeyDown);
       document.removeEventListener("keyup", onGlobalKeyUp);
@@ -97,16 +97,6 @@ export const ChihuoTable = ({
   }, [columns]);
 
   useEffect(() => {
-    if (disableEvent) {
-      document.removeEventListener("keydown", onGlobalKeyDown);
-      document.removeEventListener("keyup", onGlobalKeyUp);
-    } else {
-      document.addEventListener("keydown", onGlobalKeyDown, false);
-      document.addEventListener("keyup", onGlobalKeyUp, false);
-    }
-  }, [disableEvent]);
-
-  useEffect(() => {
     if (initialState && initialState.sorting && !sorting) {
       setSorting(initialState.sorting);
     }
@@ -116,27 +106,30 @@ export const ChihuoTable = ({
 
   useEffect(() => {
     if (sorting && rows.length > 0) {
-      const result = rows.sort((a, b) => {
-        if (
-          typeof a[sorting.field] === "string" ||
-          a[sorting.field] instanceof String
-        ) {
-          return sorting.sort == "asc"
-            ? a[sorting.field].localeCompare(b[sorting.field])
-            : b[sorting.field].localeCompare(a[sorting.field]);
-        } else {
-          return sorting.sort == "asc"
-            ? a[sorting.field] - b[sorting.field]
-            : b[sorting.field] - a[sorting.field];
+      let result = [...rows];
+      let col = columnMap[sorting.field];
+      let type = col.type ? col.type : "string";
+
+      result.sort((a, b) => {
+        switch (type) {
+          case "number":
+            return sorting.sort == "asc"
+              ? a[sorting.field] - b[sorting.field]
+              : b[sorting.field] - a[sorting.field];
+            break;
+          case "dateTime":
+            return sorting.sort == "asc"
+              ? new Date(a[sorting.field]) - new Date(b[sorting.field])
+              : new Date(b[sorting.field]) - new Date(a[sorting.field]);
+            break;
+          default:
+            return sorting.sort == "asc"
+              ? a[sorting.field].localeCompare(b[sorting.field])
+              : b[sorting.field].localeCompare(a[sorting.field]);
         }
       });
+
       setItems([...result]);
-    } else {
-      if (rows.length > 0) {
-        setItems([...rows]);
-      } else {
-        setItems([]);
-      }
     }
 
     return () => {};
@@ -229,7 +222,6 @@ export const ChihuoTable = ({
       }
       setLatestCheckboxId(GetRowIndex(id));
     }
-
     onSelectionModelChange(result);
   };
 
@@ -241,7 +233,7 @@ export const ChihuoTable = ({
     }
   };
   return (
-    <Root>
+    <Root sx={sx}>
       <Stack>
         <Header
           direction="row"
@@ -326,7 +318,7 @@ export const ChihuoTable = ({
                 onRowClick(row, event);
               }}
             >
-              <Box>
+              <Box onKeyDown={(event) => {}}>
                 <Checkbox
                   checked={
                     selectionModel
@@ -401,7 +393,7 @@ export const ChihuoTable = ({
                       ) : columnMap[key].renderCell ? (
                         columnMap[key].renderCell(MakeParams(row))
                       ) : (
-                        row[key]
+                        <Typography noWrap>{row[key]}</Typography>
                       )}
                     </Stack>
                   );
@@ -455,4 +447,5 @@ ChihuoTable.defaultProps = {
   onSortModelChange: () => {},
   initialState: null,
   rows: [],
+  sx: {},
 };
