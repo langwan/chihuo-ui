@@ -54,6 +54,7 @@ export const ChihuoTable = ({
   onSortModelChange,
   initialState,
   rows,
+  sx,
 }) => {
   const [columnMap, setColumnMap] = useState({});
   const [editValue, setEditValue] = useState("");
@@ -105,7 +106,7 @@ export const ChihuoTable = ({
 
   useEffect(() => {
     if (sorting && rows.length > 0) {
-      let result = rows;
+      let result = [...rows];
       let col = columnMap[sorting.field];
       let type = col.type ? col.type : "string";
 
@@ -116,7 +117,7 @@ export const ChihuoTable = ({
               ? a[sorting.field] - b[sorting.field]
               : b[sorting.field] - a[sorting.field];
             break;
-          case "dataTime":
+          case "dateTime":
             return sorting.sort == "asc"
               ? new Date(a[sorting.field]) - new Date(b[sorting.field])
               : new Date(b[sorting.field]) - new Date(a[sorting.field]);
@@ -232,7 +233,7 @@ export const ChihuoTable = ({
     }
   };
   return (
-    <Root>
+    <Root sx={sx}>
       <Stack>
         <Header
           direction="row"
@@ -446,4 +447,5 @@ ChihuoTable.defaultProps = {
   onSortModelChange: () => {},
   initialState: null,
   rows: [],
+  sx: {},
 };

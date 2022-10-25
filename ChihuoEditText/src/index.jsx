@@ -11,6 +11,7 @@ export const ChihuoEditText = ({
   isEdit,
   content,
   onSave,
+  onStart,
   onStop,
   ...props
 }) => {
@@ -32,6 +33,7 @@ export const ChihuoEditText = ({
   useEffect(() => {
     if (isEdit) {
       setEditState(start);
+      onStart(name);
     }
   }, [isEdit]);
 
@@ -48,13 +50,11 @@ export const ChihuoEditText = ({
             disableUnderline: true,
           }}
           onBlur={(event) => {
-            console.log("key", name);
             setEditState(end);
             onSave(name, value);
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              console.log("key", name);
               setEditState(end);
               onSave(name, value);
             } else if (event.key === "Escape") {
@@ -90,6 +90,7 @@ export const ChihuoEditText = ({
             event.stopPropagation();
             event.preventDefault();
             setEditState(start);
+            onStart(name);
           }}
         >
           <Typography {...TextProps}>{content}</Typography>
@@ -97,4 +98,9 @@ export const ChihuoEditText = ({
       )}
     </Box>
   );
+};
+
+ChihuoEditText.defaultProps = {
+  onStart: (name) => {},
+  onStop: (name, value) => {},
 };

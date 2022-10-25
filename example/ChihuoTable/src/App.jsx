@@ -24,7 +24,7 @@ import {
   IconTrash,
 } from "@tabler/icons";
 import { ChihuoTable } from "ChihuoTable";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function formatFileSize(size) {
   var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
@@ -162,12 +162,9 @@ export default () => {
     return () => {};
   }, []);
   const onSelectionModelChange = (newSelection) => {
-    console.log("onSelectionModelChange", newSelection);
     setSelectionModel([...newSelection]);
   };
-  const onRowClick = (row, event) => {
-    console.log("onRowClick", row);
-  };
+  const onRowClick = (row, event) => {};
   const onRowContextMenu = (row, event) => {
     if (!selectionModel.includes(row.id)) {
       setSelectionModel([row.id]);
@@ -186,7 +183,6 @@ export default () => {
     );
   };
   const onCellEditStop = (id, field, value) => {
-    console.log("onCellEditStop", id, field, value);
     setCellModesModel({});
     const result = rows.map((row) => {
       if (row.id == id) {
@@ -195,9 +191,8 @@ export default () => {
         return row;
       }
     });
-    console.log("result", result);
+
     setRows([...result]);
-    console.log("selectionModel", selectionModel);
   };
   const onCellEditStart = (ref) => {};
 

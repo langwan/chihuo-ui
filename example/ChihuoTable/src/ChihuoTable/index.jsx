@@ -66,21 +66,17 @@ export const ChihuoTable = ({
 
   const onGlobalKeyDown = (event) => {
     if (event.key === "Shift") {
-      console.log("set key = ", event.key);
       setFunctionKeyIsDown(true);
     }
   };
 
   const onGlobalKeyUp = (event) => {
-    console.log("onGlobalKeyPress", event.key);
     if (event.key === "Shift") {
-      console.log("remove key = ", event.key);
       setFunctionKeyIsDown(false);
     }
   };
 
   useEffect(() => {
-    console.log("init useEffect");
     document.addEventListener("keydown", onGlobalKeyDown, false);
     document.addEventListener("keyup", onGlobalKeyUp, false);
     return () => {
@@ -111,7 +107,6 @@ export const ChihuoTable = ({
   }, [disableEvent]);
 
   useEffect(() => {
-    console.log("useeffect initialState", initialState);
     if (initialState && initialState.sorting && !sorting) {
       setSorting(initialState.sorting);
     }
@@ -120,7 +115,6 @@ export const ChihuoTable = ({
   }, [initialState]);
 
   useEffect(() => {
-    console.log("useeffect sorting", rows, sorting);
     if (sorting && rows.length > 0) {
       const result = rows.sort((a, b) => {
         if (
@@ -163,7 +157,7 @@ export const ChihuoTable = ({
 
   const onChangeCheckbox = (event) => {
     const id = event.target.value;
-    console.log("id", id);
+
     var result = selectionModel;
 
     if (result.includes(id)) {
@@ -231,13 +225,11 @@ export const ChihuoTable = ({
           }
         }
       } else {
-        console.log("result1", result);
         result.push(id);
-        console.log("setLatestCheckboxId", id, GetRowIndex(id));
       }
       setLatestCheckboxId(GetRowIndex(id));
     }
-    console.log("result2", result);
+
     onSelectionModelChange(result);
   };
 
@@ -283,10 +275,6 @@ export const ChihuoTable = ({
               <Stack
                 onClick={(event) => {
                   if (sorting) {
-                    console.log({
-                      field: col.field,
-                      sort: sorting.sort == "asc" ? "desc" : "asc",
-                    });
                     setSorting({
                       field: col.field,
                       sort: sorting.sort == "asc" ? "desc" : "asc",
@@ -335,15 +323,10 @@ export const ChihuoTable = ({
               justifyContent={"flex-start"}
               alignItems="center"
               onClick={(event) => {
-                console.log("click row");
                 onRowClick(row, event);
               }}
             >
-              <Box
-                onKeyDown={(event) => {
-                  console.log("event.key", event.key);
-                }}
-              >
+              <Box>
                 <Checkbox
                   checked={
                     selectionModel
@@ -396,7 +379,6 @@ export const ChihuoTable = ({
                           }}
                           inputRef={(el) => {
                             if (!editValue && el) {
-                              console.log("el.select");
                               el.select();
                               el.focus();
                               setEditValue(row[key]);
