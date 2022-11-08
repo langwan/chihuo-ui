@@ -24,6 +24,7 @@ import {
   IconTrash,
 } from "@tabler/icons";
 import { ChihuoTable } from "ChihuoTable";
+
 import { useEffect, useState } from "react";
 
 function formatFileSize(size) {
@@ -72,7 +73,7 @@ const columns = [
     field: "op",
     headerName: "操作",
     width: 160,
-    renderCell: (params) => <Box>11</Box>,
+    renderCell: (params) => <Box></Box>,
   },
 ];
 
@@ -183,6 +184,7 @@ export default () => {
     );
   };
   const onCellEditStop = (id, field, value) => {
+    console.log("onCellEditStop");
     setCellModesModel({});
     const result = rows.map((row) => {
       if (row.id == id) {
@@ -195,7 +197,16 @@ export default () => {
     setRows([...result]);
   };
   const onCellEditStart = (ref) => {};
-
+  const onCellEditSave = (id, field, value) => {
+    let rs = rows.map((row) => {
+      if (row.id == id) {
+        row["name"] = value;
+      }
+      return row;
+    });
+    setRows([...rs]);
+    setCellModesModel({});
+  };
   const onSortModelChange = (filed, sort) => {};
   const onLoadMore = () => {
     const result = [];
@@ -230,6 +241,7 @@ export default () => {
         onRowContextMenu={onRowContextMenu}
         onLoadMore={onLoadMore}
         onSortModelChange={onSortModelChange}
+        onCellEditSave={onCellEditSave}
         initialState={{ sorting: { field: "updated_at", sort: "desc" } }}
       />
       <ClickAwayListener
@@ -276,7 +288,16 @@ export default () => {
             <ListItemText>拷贝</ListItemText>
             <Typography>⌘C</Typography>
           </MenuItem>
-          <MenuItem onClick={onContentMenuClose}>
+          <MenuItem
+            onClick={(event) => {
+              console.log("编辑", selectionModel);
+              if (selectionModel.length == 1) {
+                console.log({ id: selectionModel[0] });
+                setCellModesModel({ id: selectionModel[0], field: "name" });
+              }
+              onContentMenuClose();
+            }}
+          >
             <ListItemIcon>
               <IconEdit stroke={1} width={20} />
             </ListItemIcon>

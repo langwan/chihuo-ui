@@ -1012,6 +1012,14 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
+"@chihuo/edittext@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@chihuo/edittext/-/edittext-1.0.6.tgz#f14c6ad91ac9071da372a8269094ae3f68775c32"
+  integrity sha512-tjU6QW3Fyb8QL43KmeuwMeQhXwKruk7+QjcvQETg7btaPq/tS3icsUUqalchiRpb43K+HOAC6Mb1peqYoHu3QA==
+  dependencies:
+    "@mui/material" "^5.10.10"
+    react "^18.2.0"
+
 "@emotion/babel-plugin@^11.10.0":
   version "11.10.2"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.2.tgz#879db80ba622b3f6076917a1e6f648b1c7d008c7"

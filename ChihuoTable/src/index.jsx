@@ -1,7 +1,8 @@
-import { Box, Checkbox, Stack, TextField, Typography } from "@mui/material";
-
+import { ChihuoEditText } from "@chihuo/edittext";
+import { Box, Checkbox, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 const name = "ChihuoTable";
 
@@ -20,9 +21,9 @@ const Root = styled("div", {
 
 const Header = styled(Stack, {
   name: "ChihuoTableHeader",
-  slot: "Root",
   overridesResolver: (props, styles) => [styles.root],
 })(({ theme }) => ({
+  fontSize: 14,
   ":hover": {
     backgroundColor: "#F4F4F4",
   },
@@ -55,7 +56,10 @@ export const ChihuoTable = ({
   initialState,
   rows,
   sx,
+  onCellEditSave,
 }) => {
+  const [editing, setEditing] = useState(false);
+  const [currentEditText, setCurrentEditText] = useState(null);
   const [columnMap, setColumnMap] = useState({});
   const [editValue, setEditValue] = useState("");
   const [items, setItems] = useState([]);
@@ -236,7 +240,6 @@ export const ChihuoTable = ({
     <Root sx={sx}>
       <Stack>
         <Header
-          className="ChihuoTableHeader-root"
           direction="row"
           justifyContent={"flex-start"}
           alignItems="center"
@@ -341,7 +344,6 @@ export const ChihuoTable = ({
                 if (row[key]) {
                   return (
                     <Stack
-                      className={"ChihuoTable-cell"}
                       direction={"row"}
                       alignItems="center"
                       justifyContent={"flex-start"}
@@ -357,40 +359,28 @@ export const ChihuoTable = ({
                       {cellModesModel &&
                       cellModesModel.id == getRowId(row) &&
                       cellModesModel.field == key ? (
-                        <TextField
-                          onBlur={(event) => {
-                            setEditValue(null);
-                            onCellEditStop(getRowId(row), key, editValue);
+                        <ChihuoEditText
+                          sx={{ mr: 1 }}
+                          TextProps={{
+                            noWrap: true,
+                            width: "100%",
                           }}
-                          onKeyDown={(event) => {
-                            if (
-                              event.key === "Enter" ||
-                              event.key === "Escape"
-                            ) {
-                              setEditValue(null);
-                              onCellEditStop(getRowId(row), key, editValue);
-                            }
+                          name={key}
+                          isEdit={cellModesModel.id == getRowId(row)}
+                          content={row[cellModesModel.field]}
+                          onStop={(name, value) => {
+                            setCurrentEditText(null);
+                            setEditing(false);
                           }}
-                          inputRef={(el) => {
-                            if (!editValue && el) {
-                              el.select();
-                              el.focus();
-                              setEditValue(row[key]);
-                            }
+                          onStart={(name) => {
+                            setCurrentEditText(name);
+                            setEditing(true);
                           }}
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              borderRadius: 0,
-                            },
-                            "& .MuiOutlinedInput-input": {
-                              padding: 0,
-                              pl: 1,
-                            },
+                          onSave={async (name, value) => {
+                            setCurrentEditText(null);
+                            setEditing(false);
+                            onCellEditSave(getRowId(row), name, value);
                           }}
-                          onChange={(event) => {
-                            setEditValue(event.target.value);
-                          }}
-                          value={editValue || row[key]}
                         />
                       ) : columnMap[key].renderCell ? (
                         columnMap[key].renderCell(MakeParams(row))
@@ -447,6 +437,7 @@ ChihuoTable.defaultProps = {
   onCellEditStart: () => {},
   onCellEditStop: () => {},
   onSortModelChange: () => {},
+  onCellEditSave: () => {},
   initialState: null,
   rows: [],
   sx: {},

@@ -4,6 +4,7 @@
   "main": "index.jsx.js",
   "license": "MIT",
   "dependencies": {
+    "@chihuo/edittext": "^1.0.6",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
