@@ -1,10 +1,11 @@
 {
-  "version": "1.0.12",
+  "version": "1.1.0",
   "license": "MIT",
   "name": "@chihuo/table",
   "main": "dist/index.jsx",
   "source": "src/index.jsx",
   "dependencies": {
+    "@chihuo/edittext": "^1.0.6",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/material": "^5.10.10",
